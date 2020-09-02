@@ -21,7 +21,7 @@ static inline void vst1q_f32_aligned(float* address, float32x4_t vector) {
 	vst1q_f32((float*) __builtin_assume_aligned(address, sizeof(float32x4_t)), vector);
 }
 
-#if defined(__aarch64__) || (defined(__ARM_NEON_FP) && (__ARM_NEON_FP & 2))
+#if defined(__aarch64__)  || defined(__gptx__) || (defined(__ARM_NEON_FP) && (__ARM_NEON_FP & 2))
 	#ifdef __clang__
 		static inline float32x4_t vld1q_f32_f16(const void* address) {
 			return vcvt_f32_f16(vld1_f16((const __fp16*) address));
@@ -63,7 +63,7 @@ static inline void vst1q_f32_aligned(float* address, float32x4_t vector) {
 #endif
 
 static inline float32x4_t vmuladdq_f32(float32x4_t acc, float32x4_t a, float32x4_t b) {
-	#if defined(__aarch64__)
+	#if defined(__aarch64__) || defined(__gptx__)
 		return vfmaq_f32(acc, a, b);
 	#else
 		return vmlaq_f32(acc, a, b);
@@ -71,7 +71,7 @@ static inline float32x4_t vmuladdq_f32(float32x4_t acc, float32x4_t a, float32x4
 }
 
 static inline float32x4_t vmulsubq_f32(float32x4_t acc, float32x4_t a, float32x4_t b) {
-	#if defined(__aarch64__)
+	#if defined(__aarch64__) || defined(__gptx__)
 		return vfmsq_f32(acc, a, b);
 	#else
 		return vmlsq_f32(acc, a, b);
@@ -79,7 +79,7 @@ static inline float32x4_t vmulsubq_f32(float32x4_t acc, float32x4_t a, float32x4
 }
 
 static inline float32x4_t vmuladdq_lane0_f32(float32x4_t acc, float32x4_t a, float32x2_t b) {
-	#if defined(__aarch64__)
+	#if defined(__aarch64__) || defined(__gptx__)
 		return vfmaq_lane_f32(acc, a, b, 0);
 	#else
 		return vmlaq_lane_f32(acc, a, b, 0);
@@ -87,7 +87,7 @@ static inline float32x4_t vmuladdq_lane0_f32(float32x4_t acc, float32x4_t a, flo
 }
 
 static inline float32x4_t vmuladdq_lane1_f32(float32x4_t acc, float32x4_t a, float32x2_t b) {
-	#if defined(__aarch64__)
+	#if defined(__aarch64__) || defined(__gptx__)
 		return vfmaq_lane_f32(acc, a, b, 1);
 	#else
 		return vmlaq_lane_f32(acc, a, b, 1);
@@ -95,7 +95,7 @@ static inline float32x4_t vmuladdq_lane1_f32(float32x4_t acc, float32x4_t a, flo
 }
 
 static inline float32x4_t vmulsubq_lane0_f32(float32x4_t acc, float32x4_t a, float32x2_t b) {
-	#if defined(__aarch64__)
+	#if defined(__aarch64__) || defined(__gptx__)
 		return vfmsq_lane_f32(acc, a, b, 0);
 	#else
 		return vmlsq_lane_f32(acc, a, b, 0);
@@ -103,7 +103,7 @@ static inline float32x4_t vmulsubq_lane0_f32(float32x4_t acc, float32x4_t a, flo
 }
 
 static inline float32x4_t vmulsubq_lane1_f32(float32x4_t acc, float32x4_t a, float32x2_t b) {
-	#if defined(__aarch64__)
+	#if defined(__aarch64__) || defined(__gptx__)
 		return vfmsq_lane_f32(acc, a, b, 1);
 	#else
 		return vmlsq_lane_f32(acc, a, b, 1);
@@ -111,7 +111,7 @@ static inline float32x4_t vmulsubq_lane1_f32(float32x4_t acc, float32x4_t a, flo
 }
 
 static inline float32x2_t vmuladd_f32(float32x2_t acc, float32x2_t a, float32x2_t b) {
-	#if defined(__aarch64__)
+	#if defined(__aarch64__) || defined(__gptx__)
 		return vfma_f32(acc, a, b);
 	#else
 		return vmla_f32(acc, a, b);
@@ -119,7 +119,7 @@ static inline float32x2_t vmuladd_f32(float32x2_t acc, float32x2_t a, float32x2_
 }
 
 static inline float32x2_t vmulsub_f32(float32x2_t acc, float32x2_t a, float32x2_t b) {
-	#if defined(__aarch64__)
+	#if defined(__aarch64__) || defined(__gptx__)
 		return vfms_f32(acc, a, b);
 	#else
 		return vmls_f32(acc, a, b);
@@ -127,7 +127,7 @@ static inline float32x2_t vmulsub_f32(float32x2_t acc, float32x2_t a, float32x2_
 }
 
 static inline float32x2_t vmuladd_lane0_f32(float32x2_t acc, float32x2_t a, float32x2_t b) {
-	#if defined(__aarch64__)
+	#if defined(__aarch64__) || defined(__gptx__)
 		return vfma_lane_f32(acc, a, b, 0);
 	#else
 		return vmla_lane_f32(acc, a, b, 0);
@@ -135,7 +135,8 @@ static inline float32x2_t vmuladd_lane0_f32(float32x2_t acc, float32x2_t a, floa
 }
 
 static inline float32x2_t vmuladd_lane1_f32(float32x2_t acc, float32x2_t a, float32x2_t b) {
-	#if defined(__aarch64__)
+	#if defined(__aarch64__) || defined(__gptx__)
+
 		return vfma_lane_f32(acc, a, b, 1);
 	#else
 		return vmla_lane_f32(acc, a, b, 1);
@@ -143,7 +144,8 @@ static inline float32x2_t vmuladd_lane1_f32(float32x2_t acc, float32x2_t a, floa
 }
 
 static inline float32x2_t vmulsub_lane0_f32(float32x2_t acc, float32x2_t a, float32x2_t b) {
-	#if defined(__aarch64__)
+	#if defined(__aarch64__) || defined(__gptx__)
+
 		return vfms_lane_f32(acc, a, b, 0);
 	#else
 		return vmls_lane_f32(acc, a, b, 0);
@@ -151,7 +153,8 @@ static inline float32x2_t vmulsub_lane0_f32(float32x2_t acc, float32x2_t a, floa
 }
 
 static inline float32x2_t vmulsub_lane1_f32(float32x2_t acc, float32x2_t a, float32x2_t b) {
-	#if defined(__aarch64__)
+	#if defined(__aarch64__) || defined(__gptx__)
+
 		return vfms_lane_f32(acc, a, b, 1);
 	#else
 		return vmls_lane_f32(acc, a, b, 1);
